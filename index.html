@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ever Growing Academic Writing Guide</title>
+<style>
+/* ================================================================
+   VARIABLES  (Jupyter/Sphinx Book Theme inspired)
+================================================================ */
+:root {
+  --primary:       #130654;
+  --link:          #005b81;
+  --link-hover:    #e32e00;
+  --text:          #333333;
+  --text-light:    #5a5a5a;
+  --bg:            #ffffff;
+  --bg-off:        #fafafa;
+  --bg-sidebar:    #ffffff;
+  --border:        rgba(0,0,0,0.10);
+  --border-strong: #ccc;
+
+  --c-note:        #007bff;
+  --c-tip:         #28a745;
+  --c-warning:     #e8840a;
+  --c-important:   #130654;
+  --c-danger:      #dc3545;
+  --c-seealso:     #28a745;
+  --c-example:     #6f42c1;
+
+  --sidebar-w:     275px;
+  --toc-w:         220px;
+  --header-h:      60px;
+  --font-base:     15px;
+  --font-mono:     "SFMono-Regular", Menlo, Consolas, Monaco, "Liberation Mono", monospace;
+  --font-body:     -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ================================================================
+   RESET & BASE
+================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: var(--font-base); scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+a { color: var(--link); text-decoration: none; }
+a:hover { color: var(--link-hover); text-decoration: underline; }
+
+/* ================================================================
+   TOPBAR
+================================================================ */
+#topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 1.2rem;
+  gap: 1rem;
+  z-index: 1000;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+#topbar .site-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  text-decoration: none;
+  flex: 1;
+}
+
+.topbar-toggle {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbar-toggle:hover { background: rgba(255,255,255,0.15); }
+.topbar-toggle span {
+  display: block;
+  width: 18px; height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* ================================================================
+   LAYOUT  (sidebar | content | toc)
+================================================================ */
+#layout {
+  display: flex;
+  margin-top: var(--header-h);
+  min-height: calc(100vh - var(--header-h));
+}
+
+/* ── Left sidebar ── */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: var(--header-h);
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.25s ease;
+  z-index: 900;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 2px; }
+
+#sidebar.collapsed { transform: translateX(-100%); }
+
+.sidebar-inner { padding: 1rem 0 3rem; }
+
+.sidebar-brand {
+  padding: 0.75rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-brand a {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+  line-height: 1.3;
+  display: block;
+}
+
+.sidebar-brand small {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-weight: 400;
+  margin-top: 0.15rem;
+}
+
+.nav-section {
+  margin-bottom: 0.25rem;
+}
+
+.nav-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #999;
+  padding: 0.8rem 1.5rem 0.3rem;
+}
+
+.nav-section ul { list-style: none; }
+
+.nav-section ul li a {
+  display: block;
+  padding: 0.32rem 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+  border-left: 3px solid transparent;
+  line-height: 1.5;
+}
+
+.nav-section ul li a:hover {
+  color: var(--primary);
+  background: rgba(19,6,84,0.04);
+  text-decoration: none;
+}
+
+.nav-section ul li a.active {
+  color: var(--primary);
+  border-left-color: var(--primary);
+  background: rgba(19,6,84,0.06);
+  font-weight: 600;
+}
+
+.nav-section ul li ul li a {
+  padding-left: 2.5rem;
+  font-size: 0.82rem;
+}
+
+/* ── Main content ── */
+#main {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  margin-right: var(--toc-w);
+  min-width: 0;
+  transition: margin 0.25s ease;
+}
+
+#main.no-toc  { margin-right: 0; }
+#main.no-nav  { margin-left: 0; }
+
+.content-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+}
+
+/* ── Right TOC ── */
+#page-toc {
+  width: var(--toc-w);
+  flex-shrink: 0;
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  padding: 1.5rem 1rem;
+  border-left: 1px solid var(--border);
+  font-size: 0.82rem;
+  scrollbar-width: thin;
+  scrollbar-color: #e0e0e0 transparent;
+  transition: transform 0.25s ease;
+}
+
+#page-toc::-webkit-scrollbar { width: 3px; }
+#page-toc::-webkit-scrollbar-thumb { background: #ddd; }
+
+#page-toc.collapsed { transform: translateX(100%); }
+
+.toc-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  color: #aaa;
+  margin-bottom: 0.6rem;
+}
+
+.toc-list { list-style: none; }
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 0.2rem 0.5rem;
+  color: #777577;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  line-height: 1.45;
+}
+.toc-list a:hover { color: var(--primary); text-decoration: none; }
+.toc-list a.toc-active {
+  color: var(--primary);
+  border-left-color: var(--primary);
+  font-weight: 500;
+}
+.toc-list li ul { padding-left: 0.75rem; }
+.toc-list li ul a { font-size: 0.78rem; color: #999; }
+
+/* ================================================================
+   ARTICLE TYPOGRAPHY
+================================================================ */
+.content-inner h1 {
+  font-size: 2rem;
+  color: var(--primary);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.content-inner .page-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.content-inner h2 {
+  font-size: 1.6rem;
+  color: var(--primary);
+  margin-top: 2.5rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.content-inner h3 {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-top: 1.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.content-inner h4 {
+  font-size: 1rem;
+  color: var(--text);
+  margin-top: 1.4rem;
+  margin-bottom: 0.3rem;
+}
+
+.content-inner p { margin-bottom: 1rem; }
+.content-inner p:last-child { margin-bottom: 0; }
+
+.content-inner ul, .content-inner ol {
+  margin: 0.5rem 0 1rem 1.5rem;
+}
+
+.content-inner li { margin-bottom: 0.25rem; }
+
+.content-inner strong { color: var(--text); }
+
+.content-inner code {
+  font-family: var(--font-mono);
+  font-size: 87.5%;
+  color: #e83e8c;
+  background: #f8f0f4;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.content-inner pre {
+  background: var(--bg-off);
+  border: 1px solid var(--border-strong);
+  border-radius: 0.4em;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.content-inner pre code {
+  color: #222;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.kw  { color: #d73a49; }
+.cm  { color: #6a737d; font-style: italic; }
+.vl  { color: #005cc5; }
+.st  { color: #032f62; }
+
+blockquote {
+  margin: 1rem 1rem;
+  padding: 0.2rem 1.5rem;
+  border-left: 4px solid #ccc;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* ================================================================
+   ADMONITION BOXES
+================================================================ */
+.admonition {
+  margin: 1.25rem 0;
+  border-radius: 0.4em;
+  box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.05), 0 0 0.0625rem rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.admonition-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admonition-title .icon { font-size: 0.9rem; }
+
+.admonition-body {
+  padding: 0.85rem 1rem 0.9rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.admonition-body p { margin-bottom: 0.6rem; }
+.admonition-body p:last-child { margin-bottom: 0; }
+.admonition-body ul { margin: 0.25rem 0 0.5rem 1.25rem; }
+.admonition-body li { margin-bottom: 0.2rem; }
+
+/* NOTE */
+.admonition.note { border: 1px solid var(--c-note); }
+.admonition.note .admonition-title { background: rgba(0,123,255,0.1); color: #0056b3; }
+
+/* TIP / HINT */
+.admonition.tip, .admonition.hint { border: 1px solid var(--c-tip); }
+.admonition.tip .admonition-title,
+.admonition.hint .admonition-title { background: rgba(40,167,69,0.1); color: #1a7531; }
+
+/* IMPORTANT */
+.admonition.important { border: 1px solid var(--c-important); }
+.admonition.important .admonition-title { background: rgba(19,6,84,0.1); color: var(--primary); }
+
+/* WARNING */
+.admonition.warning { border: 1px solid var(--c-warning); }
+.admonition.warning .admonition-title { background: rgba(232,132,10,0.1); color: #a65c00; }
+
+/* DANGER */
+.admonition.danger { border: 1px solid var(--c-danger); }
+.admonition.danger .admonition-title { background: rgba(220,53,69,0.1); color: #a71d2a; }
+
+/* EXAMPLE */
+.admonition.example { border: 1px solid var(--c-example); }
+.admonition.example .admonition-title { background: rgba(111,66,193,0.1); color: #4c2889; }
+
+/* SEE ALSO */
+.admonition.seealso { border: 1px solid var(--c-seealso); }
+.admonition.seealso .admonition-title { background: rgba(40,167,69,0.1); color: #1a7531; }
+
+/* ================================================================
+   BEFORE / AFTER COMPARISON  (custom component)
+================================================================ */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+@media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } }
+
+.comp-box {
+  border-radius: 0.3em;
+  padding: 0.75rem 1rem;
+  font-size: 0.87rem;
+  line-height: 1.55;
+}
+
+.comp-box .comp-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.4rem;
+}
+
+.comp-weak {
+  background: rgba(220,53,69,0.06);
+  border: 1px solid rgba(220,53,69,0.25);
+  color: #7a1a24;
+}
+
+.comp-weak .comp-label { color: #dc3545; }
+
+.comp-strong {
+  background: rgba(40,167,69,0.06);
+  border: 1px solid rgba(40,167,69,0.25);
+  color: #155724;
+}
+
+.comp-strong .comp-label { color: #28a745; }
+
+/* ================================================================
+   PRINCIPLE CARDS  (subtle box for key principles)
+================================================================ */
+.principle {
+  background: var(--bg-off);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 0.4em 0.4em 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.principle strong { color: var(--primary); }
+
+/* ================================================================
+   VOCAB TABLE
+================================================================ */
+.vocab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+
+.vocab-table th {
+  background: var(--primary);
+  color: #fff;
+  text-align: left;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.vocab-table td {
+  padding: 0.45rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.vocab-table tr:hover td { background: rgba(19,6,84,0.03); }
+
+.vocab-table td:first-child {
+  font-weight: 600;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* ================================================================
+   CHECKLIST BOXES
+================================================================ */
+.checklist { list-style: none; margin: 0.5rem 0; }
+.checklist li {
+  padding: 0.3rem 0;
+  padding-left: 1.75rem;
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--border);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 0.2rem;
+  color: var(--c-tip);
+  font-size: 1rem;
+}
+
+/* ================================================================
+   SECTION NAV  (prev / next)
+================================================================ */
+.section-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  gap: 1rem;
+}
+
+.section-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: var(--link);
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4em;
+  transition: border-color 0.15s, color 0.15s;
+  max-width: 48%;
+}
+
+.section-nav a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.section-nav .nav-next { margin-left: auto; text-align: right; }
+
+/* ================================================================
+   BREADCRUMB
+================================================================ */
+.breadcrumb {
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.breadcrumb a { color: var(--link); }
+.breadcrumb span { color: #ccc; }
+
+/* ================================================================
+   AUTHOR CARD
+================================================================ */
+.author-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  background: var(--bg-off);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 0.4em;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.author-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.author-meta h3 { margin: 0 0 0.2rem; font-size: 1.1rem; color: var(--primary); }
+.author-meta .role { font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.75rem; }
+.author-meta p { font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+/* ================================================================
+   CODE RESOURCE LINKS
+================================================================ */
+.resource-list { list-style: none; margin: 0.5rem 0; }
+.resource-list li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.resource-list li:last-child { border-bottom: none; }
+.resource-list li::before { content: '→'; color: var(--primary); font-weight: 700; flex-shrink: 0; }
+
+/* ================================================================
+   SECTION INTRO (lead paragraph)
+================================================================ */
+.lead {
+  font-size: 1.05rem;
+  color: var(--text-light);
+  border-left: 3px solid var(--border-strong);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.75;
+}
+
+/* ================================================================
+   NUMBERED GOALS BLOCK
+================================================================ */
+.goals-list { list-style: none; counter-reset: goals; margin: 1rem 0; }
+.goals-list li {
+  counter-increment: goals;
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  align-items: flex-start;
+}
+.goals-list li:last-child { border-bottom: none; }
+.goals-list li::before {
+  content: counter(goals);
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 1100px) {
+  #page-toc { display: none; }
+  #main { margin-right: 0; }
+}
+
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+}
+
+/* ================================================================
+   BADGE
+================================================================ */
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.15em 0.55em;
+  border-radius: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  vertical-align: middle;
+}
+.badge-primary { background: var(--primary); color: #fff; }
+.badge-tip     { background: var(--c-tip);   color: #fff; }
+.badge-warn    { background: var(--c-warning); color: #fff; }
+.badge-new     { background: var(--c-note);   color: #fff; }
+
+/* ================================================================
+   SMALL UTILITIES
+================================================================ */
+.mt-2 { margin-top: 2rem; }
+.mb-0 { margin-bottom: 0; }
+.text-muted { color: var(--text-light); font-size: 0.875rem; }
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     TOPBAR
+================================================================ -->
+<header id="topbar">
+  <button class="topbar-toggle" id="btn-nav" title="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="#" class="site-title">&#9997; Ever Growing Academic Writing Guide</a>
+  <button class="topbar-toggle" id="btn-toc" title="Toggle page contents">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ================================================================
+     LAYOUT
+================================================================ -->
+<div id="layout">
+
+<!-- ── LEFT SIDEBAR ── -->
+<nav id="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-brand">
+      <a href="#">Academic Writing Guide<small>Ever Growing · Community Resource</small></a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Overview</div>
+      <ul>
+        <li><a href="#intro" class="nav-link">Introduction</a></li>
+        <li><a href="#about" class="nav-link">About the Guide</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Writing</div>
+      <ul>
+        <li><a href="#where-to-start" class="nav-link">Where to Start</a></li>
+        <li><a href="#story-level" class="nav-link">Story Level</a>
+          <ul>
+            <li><a href="#core-principles" class="nav-link">Core Principles</a></li>
+            <li><a href="#minor-tips" class="nav-link">Minor Tips</a></li>
+          </ul>
+        </li>
+        <li><a href="#section-level" class="nav-link">Section Level</a></li>
+        <li><a href="#paragraph-level" class="nav-link">Paragraph Level</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Sentences &amp; Words</div>
+      <ul>
+        <li><a href="#sentence-level" class="nav-link">Sentence Level</a>
+          <ul>
+            <li><a href="#sentence-stress" class="nav-link">Controlling Stress</a></li>
+            <li><a href="#mental-load" class="nav-link">Reducing Mental Load</a></li>
+          </ul>
+        </li>
+        <li><a href="#word-choice" class="nav-link">Word Choice</a>
+          <ul>
+            <li><a href="#word-exercises" class="nav-link">Exercises</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Paper Sections</div>
+      <ul>
+        <li><a href="#paper-anatomy" class="nav-link">All Sections</a>
+          <ul>
+            <li><a href="#title-abstract" class="nav-link">Title &amp; Abstract</a></li>
+            <li><a href="#introduction" class="nav-link">Introduction</a></li>
+            <li><a href="#method-results" class="nav-link">Method &amp; Results</a></li>
+            <li><a href="#other-sections" class="nav-link">Other Sections</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">Tools &amp; Extras</div>
+      <ul>
+        <li><a href="#graphics" class="nav-link">Graphics</a></li>
+        <li><a href="#latex" class="nav-link">LaTeX</a></li>
+        <li><a href="#rebuttal" class="nav-link">Rebuttal</a></li>
+        <li><a href="#collaboration" class="nav-link">Collaboration</a></li>
+        <li><a href="#vocab" class="nav-link">Useful Vocabulary</a></li>
+        <li><a href="#resources" class="nav-link">Resources &amp; Links</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title">About</div>
+      <ul>
+        <li><a href="#author" class="nav-link">Donnie Z</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<main id="main">
+<article class="content-inner">
+
+  <!-- ── BREADCRUMB ── -->
+  <div class="breadcrumb">
+    <a href="#">Home</a>
+    <span>›</span>
+    <span>Academic Writing Guide</span>
+  </div>
+
+  <!-- ================================================================
+       INTRO
+  ================================================================ -->
+  <h1 id="intro">Ever Growing Academic Writing Guide</h1>
+  <p class="page-subtitle">A living handbook covering every layer of scientific writing — from narrative structure to the last punctuation mark.</p>
+
+  <div class="admonition note">
+    <div class="admonition-title"><span class="icon">ℹ</span> Community Resource</div>
+    <div class="admonition-body">
+      <p>This guide aims to help academic writers. If you have any additions or corrections, please add them or comment. It is focused on scientific and domain-specific papers — not Nature or Science.</p>
+    </div>
+  </div>
+
+  <h2 id="about">About this Guide</h2>
+  <p>The guide organizes tips by:</p>
+  <ul>
+    <li>Specific sections of academic papers</li>
+    <li>Writing at different granularities (sentences, paragraphs, full narratives)</li>
+    <li>Tools beyond writing (LaTeX, rebuttals, graphics)</li>
+  </ul>
+
+  <hr/>
+
+  <!-- ================================================================
+       WHERE TO START
+  ================================================================ -->
+  <h2 id="where-to-start">Where to Start?</h2>
+  <p class="lead">Two battle-tested approaches. Choose based on how solid your results already are.</p>
+
+  <h3>Top-Down Approach</h3>
+  <p>Begin by understanding the core narrative: <strong>What main idea should readers grasp</strong> (new method, surprising finding, criticism)? Develop an argumentation structure first, then write the abstract and introduction following this logic, and finally fill in the required sections.</p>
+
+  <div class="admonition tip">
+    <div class="admonition-title"><span class="icon">💡</span> Best for</div>
+    <div class="admonition-body">Papers where the story is clear before writing begins. Start with story, not words.</div>
+  </div>
+
+  <h3>Bottom-Up Approach</h3>
+  <p>Start with obvious, clear information — whatever feels most concrete. Useful when results are distinct and strong, methods are lengthy, or the main content already exists. Less effective when you have numerous results and some may not support the primary narrative.</p>
+
+  <div class="admonition tip">
+    <div class="admonition-title"><span class="icon">💡</span> Best for</div>
+    <div class="admonition-body">Situations where strong individual results exist but the unifying story hasn't crystallized yet.</div>
+  </div>
+
+  <hr/>
+
+  <!-- ================================================================
+       STORY LEVEL
+  ================================================================ -->
+  <h2 id="story-level">Story Level</h2>
+  <p class="lead">The highest-level decisions that shape how readers experience your paper from beginning to end.</p>
+
+  <h3 id="core-principles">Core Principles</h3>
+
+  <h4>Take readers on an understanding journey, not your discovery path</h4>
+  <p>Almost always, the path towards a finding was not direct — it involved roundabouts. Those do not matter anymore, nor does the chronological order of experiments you made. Include only what teaches readers and provides necessary background.</p>
+
+  <h4>Reader attention is your most valuable asset</h4>
+  <ul>
+    <li>Invest maximum effort at the beginning, where many readers stop</li>
+    <li>Make important content salient and attention-grabbing</li>
+    <li>Position memorable information early: abstract, introduction, section starts, paragraph starts</li>
+    <li>Papers differ from regular stories — readers need takeaway messages <em>early</em>, not as a late surprise</li>
+  </ul>
+
+  <h4>What · How · Why · Crux</h4>
+  <p>Accommodate different reader types by clearly providing all four layers:</p>
+  <ul>
+    <li><strong>What</strong> — Help readers decide if reading is worthwhile</li>
+    <li><strong>How</strong> — Enable reproduction and criticism</li>
+    <li><strong>Why</strong> — Provide insight into methodology choices</li>
+    <li><strong>Crux</strong> — New discoveries and knowledge gained</li>
+  </ul>
+
+  <h4>Kill Your Darlings</h4>
+  <p>Experts learn to cut down; beginners focus on filling pages. Side findings unrelated to the main narrative should be removed or moved to appendices. Everything should serve the coherent story. If a finding doesn't support your main argument, reconsider whether you're telling the right story to the right audience.</p>
+
+  <h4>Substantiate All Claims</h4>
+  <p>Every claim should be supported — by citing, explaining, or providing new evidence. Even small claims require substantiation.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Unsupported</div>
+          "These failures, frequently dismissed as minor, carry rich information about model limitations"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Supported</div>
+          "These failures, frequently dismissed as minor [cite], carry rich information about model limitations"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Support All Reading Depths</h4>
+  <ul>
+    <li><strong>Casual readers</strong> — remember findings from title/abstract</li>
+    <li><strong>Skimmers</strong> — understand from skimming alone</li>
+    <li><strong>Deep readers</strong> — comprehend specific sections thoroughly</li>
+    <li><strong>Replicators</strong> — access every detail for reproducibility</li>
+    <li><strong>Reviewers</strong> — find no legitimate grounds for criticism</li>
+  </ul>
+
+  <h3 id="minor-tips">Minor Tips</h3>
+
+  <h4>Avoid Repetitions</h4>
+  <p>Structure presents information once: motivation upfront, details elsewhere. Each topic section should be nearly standalone, with experiments largely understood without re-reading other sections.</p>
+
+  <h4>Tense Conventions</h4>
+  <div class="principle">
+    Previous work and past experiments → <strong>past tense</strong>. The paper itself and its current claims → <strong>present tense</strong>.
+  </div>
+
+  <h4>Strategic Example Selection</h4>
+  <p>When multiple examples fit equally well, choose ones that reappear later in the paper with variations. This primes readers and reduces cognitive load across the whole paper.</p>
+
+  <hr/>
+
+  <!-- ================================================================
+       SECTION LEVEL
+  ================================================================ -->
+  <h2 id="section-level">Section-Level Writing</h2>
+  <p class="lead">How to open, guide, and connect each major section of your paper.</p>
+
+  <h3>Open with the Gist of the Section</h3>
+  <p>Early in every section, write what is <em>achieved</em> in that section. This reduces mental load dramatically and aids any reader who is skimming.</p>
+
+  <h3>Connect to Previous Content</h3>
+  <p>Opening remarks should link to prior discussion or preview upcoming material.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">"We have shown X. In this section we will prove this is Y."</div>
+  </div>
+
+  <h3>Prefer Examples over Abstractions</h3>
+  <p>Specific examples allow readers to generalize themselves and are more convincing than abstract explanations.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Comparison</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Abstract</div>
+          "Evaluation costs are prohibitively high and adapter sizes are large"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Concrete</div>
+          "HELM evaluation costs $40K; the LLaMA-65B adapter is 3.2GB"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ================================================================
+       PARAGRAPH LEVEL
+  ================================================================ -->
+  <h2 id="paragraph-level">Paragraph-Level Writing</h2>
+
+  <h3>Connect to the Previous Paragraph</h3>
+  <p>Most paragraphs continue prior ideas through:</p>
+  <ul>
+    <li>Repeating key objects (avoiding full coreference)</li>
+    <li>Connecting words (e.g., "Regardless", "Instead")</li>
+    <li>Continuing the same idea without direct repetition</li>
+  </ul>
+
+  <h3>Start with a Point Statement</h3>
+  <p>Begin paragraphs with clear claims or organizational frameworks. This enables skimming and ensures important messages are always salient.</p>
+
+  <div class="admonition warning">
+    <div class="admonition-title"><span class="icon">⚠</span> Exercise</div>
+    <div class="admonition-body">
+      Read only the <strong>first sentence</strong> of each paragraph in a section. If you don't understand the section from just those sentences, revise or merge paragraphs.
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ================================================================
+       SENTENCE LEVEL
+  ================================================================ -->
+  <h2 id="sentence-level">Sentence-Level Writing</h2>
+  <p class="lead">Precision at the line level — where most readers experience the quality of your thinking.</p>
+
+  <h3>Actions as Verbs, Concrete Items as Nouns</h3>
+  <p>Traditional grammatical roles aid comprehension more than nominalization (representing an action as a noun).</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Nominalized (Weak)</div>
+          "shared representation omittance forgetfulness"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Verbal (Strong)</div>
+          "share, represents, omitted, forgetting"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Subject Performs the Important Verb</h3>
+  <p>The subject should actively perform a meaningful verb, helping readers identify who is responsible for the main claims and results.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Examples</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Before</div>
+          "On the face of it, this may seem as a contradiction to the proofs"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">After</div>
+          "On the face of it, this contradicts the proofs"
+        </div>
+      </div>
+      <div class="comparison" style="margin-top:0.5rem;">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Before</div>
+          "These findings suggest that the effectiveness of specific prompt components is dependent on..."
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">After</div>
+          "These findings suggest that effectiveness depends on..."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Precision and Minimal Statements</h3>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Verbose</div>
+          "Another trait that agents are expected to show is a manner of interacting with an environment"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Precise</div>
+          "Agents are also expected to interact with the environment"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Parallelism in Form</h3>
+  <p>When clauses share meaning, parallel structure improves comprehension significantly.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Asymmetric</div>
+          "Prompt Agreement as Evidence for Agreement of the Ground Truth"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Parallel</div>
+          "Prompt Agreement as Evidence for Ground Truth Agreement"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Explicit over Implicit</h3>
+  <p>Pronouns (<em>it, they, his</em>) and vague quantifiers (<em>many, different, various</em>) require resolution effort. Replace them with specific names.</p>
+  <ul>
+    <li><code>such/given/many/various studies</code> → <code>efficiency studies</code></li>
+    <li><code>He</code> → use the person's name</li>
+    <li><code>There are different methods to understand what knowledge they use</code> → <code>Interpretability methods link internal knowledge to model outputs</code></li>
+  </ul>
+
+  <h3>Familiar First, Surprises Last</h3>
+  <p>Familiar concepts come first; surprises and new information come later. This provides continuity, reduces mental load, and lets you control emphasis.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Controlling emphasis</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Key term buried</div>
+          "Large Language Model scaling laws predict LLM performance efficiently"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Key term at end</div>
+          "Large Language Model scaling laws efficiently predict LLM performance"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 id="sentence-stress">Controlling Sentence Stress</h3>
+  <p>Sentence beginnings and endings receive the strongest reader attention. Use this deliberately.</p>
+
+  <h4>Strong Endings Win</h4>
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Weak ending (preposition)</div>
+          "The sensitivity of the sensors was the primary metric we focused the optimization on"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Strong ending (technical term)</div>
+          "We focused the optimization on the primary metric: sensor sensitivity"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Colon as the Most Aggressive Stress Signal</h4>
+  <p>Functions as a wall creating a high-tension pause before the payload.</p>
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Standard</div>
+          "The degradation was caused by the high acidity of the solution"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Colon stress</div>
+          "One factor was responsible for the sample degradation: high solution acidity"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Negation Focuses Attention</h4>
+  <p>The "It was not X, but Y" structure places stress exactly on the intended target.</p>
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Standard</div>
+          "We focused on kinetic energy rather than mass"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Negation stress</div>
+          "It was not the mass, but the kinetic energy, that dictated the outcome"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Em-Dashes Force Lingering</h4>
+  <p>Em-dashes pause the reader right after a key term, forcing them to process its importance before continuing.</p>
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Standard</div>
+          "This model uses a dynamic learning rate for better convergence"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Em-dash stress</div>
+          "This model utilizes a dynamic learning rate — a critical departure from standard architectures — to ensure convergence"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Avoid Weak Endings</h4>
+  <p>Never end sentences with: table/figure citations, vague pronouns, or prepositions.</p>
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Example</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak">
+          <div class="comp-label">Weak ending</div>
+          "The hypothesis was supported by the experimental results, as shown in Table 4"
+        </div>
+        <div class="comp-box comp-strong">
+          <div class="comp-label">Strong ending</div>
+          "As shown in Table 4, the experimental results strongly supported the hypothesis"
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 id="mental-load">Reducing Reader Mental Load</h3>
+
+  <h4>Shorten Distances Between Connected Concepts</h4>
+  <p>Nouns connect to verbs; adjectives to nouns; adverbs to verbs. Reducing the distance between related elements improves reading fluency.</p>
+
+  <div class="admonition danger">
+    <div class="admonition-title"><span class="icon">✖</span> Avoid</div>
+    <div class="admonition-body">
+      <code>"The X — which y that Z before N — did it"</code><br/>Long interrupting clauses separate the subject from its verb.
+    </div>
+  </div>
+
+  <h4>Reduce Ambiguities</h4>
+  <p>Most common: coreferences (<em>it, this, those</em>) may refer to multiple entities. Use sparingly; replace with the specific name.</p>
+
+  <hr/>
+
+  <!-- ================================================================
+       WORD CHOICE
+  ================================================================ -->
+  <h2 id="word-choice">Word Choice</h2>
+  <p class="lead">Every word must earn its place. Be precise, minimal, and specific.</p>
+
+  <h3>"They will understand." — No, they won't.</h3>
+  <p>Assume readers have missed context, aren't from the field, or skimmed. Actively catch hints, unsaid implications, or unclear references and clarify every one.</p>
+
+  <h3>Minimize Abbreviations and Jargon</h3>
+  <p>Make every word as easy as possible. Define unfamiliar terms — briefly in the introduction if necessary. Abbreviations feel less formal; avoid contractions (<code>don't</code> → <code>do not</code>). Accepted abbreviations include language staples like <code>e.g.</code>, <code>i.e.</code>, <code>c.f.</code></p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Three levels of definition</div>
+    <div class="admonition-body">
+      <ul>
+        <li>Simple: "Recurrent Neural Networks (RNNs)"</li>
+        <li>Formal: "Recurrent Neural Networks (hereafter RNNs)"</li>
+        <li>Explanatory: "Recurrent Neural Networks — networks where activations can pass the same neuron more than once"</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Avoid Qualifier Words</h3>
+  <div class="admonition warning">
+    <div class="admonition-title"><span class="icon">⚠</span> Cut these words</div>
+    <div class="admonition-body">
+      <p><em>very, really, quite, extremely, simply, easily, trivially, clearly</em> — these words lose impact with overuse. When readers don't understand, they add frustration. When they do, they emphasize uninterestingness.</p>
+    </div>
+  </div>
+
+  <h3>Avoid Fillers and Underspecified Verbs</h3>
+  <p>Remove words providing no meaning. Replace helper verbs where real verbs work:</p>
+  <ul>
+    <li><code>use / leverage / utilize</code> → use the specific action verb</li>
+    <li><code>make / get / take / is done</code> → replace with a direct verb</li>
+    <li><code>"we use the training scheme"</code> → <code>"we train"</code></li>
+    <li><code>stuff / things / something</code> → replace with accurate nouns</li>
+  </ul>
+
+  <h3>Avoid Underspecified Nouns</h3>
+  <p>Replace placeholders with accurate words. Increase specificity: <code>"decrease"</code> → <code>"plummets"</code>.</p>
+
+  <h3>Redundant Quantifiers</h3>
+  <p>"We propose <em>several</em> methods to…" — does "several" convey information beyond indicating plurality? In most cases, no. Audit every quantifier.</p>
+
+  <h3>Know Yourself</h3>
+  <p>Authors tend to repeat their personal word arsenal. If you frequently use <em>so, indeed, still, in fact</em> — hunt them down and consider changing or deleting as appropriate.</p>
+
+  <h3 id="word-exercises">Exercises in Word Choice</h3>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 1 — Prefer verbs</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak"><div class="comp-label">Before</div>"The effect of scaling model size differs between scaled families, but only slightly"</div>
+        <div class="comp-box comp-strong"><div class="comp-label">After</div>"Model families scale quite similarly by model size"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 2 — Actions as verbs</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak"><div class="comp-label">Before</div>"While the majority of shared knowledge representation occurs among languages using the same script..."</div>
+        <div class="comp-box comp-strong"><div class="comp-label">After</div>"While knowledge is mostly shared among languages using the same script..."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 3 — Remove "new"</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak"><div class="comp-label">Before</div>"We present MICALA, a new dataset developed for editing factual knowledge"</div>
+        <div class="comp-box comp-strong"><div class="comp-label">After</div>"We present MICALA, a dataset for editing factual knowledge"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 4 — Cut bureaucratic openings</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak"><div class="comp-label">Before</div>"We start by providing a comprehensive breakdown of the various procedural steps constituting our proposed approach"</div>
+        <div class="comp-box comp-strong"><div class="comp-label">After</div>"We start breaking down our approach into steps"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 5 — Eliminate empty analysis claims</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak"><div class="comp-label">Before</div>"Our comprehensive analysis aims to help us understand on why our method works"</div>
+        <div class="comp-box comp-strong"><div class="comp-label">After</div>"We analyze convergence speed and find our method converges faster with longer input text"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 6 — Remove filler modals</div>
+    <div class="admonition-body">
+      <div class="comparison">
+        <div class="comp-box comp-weak"><div class="comp-label">Before</div>"Is it possible for a model to learn from a gradient step in the same way it learns from context?"</div>
+        <div class="comp-box comp-strong"><div class="comp-label">After</div>"Can a model learn from a gradient step in the same way it learns from context?"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Ex. 7 — Parallel structure in lists</div>
+    <div class="admonition-body">
+      <p><strong>Inconsistent subject (Weak):</strong></p>
+      <ul>
+        <li>"The plugin should be 'transparent' to the user."</li>
+        <li>"The user should be able to manage their data on their own."</li>
+        <li>"The plugin must conform to established privacy standards."</li>
+      </ul>
+      <p style="margin-top:0.6rem;"><strong>Consistent subject (Strong):</strong> Keep either "The plugin…" or "The user…" consistent across bullets, never alternating mid-list.</p>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ================================================================
+       PAPER ANATOMY
+  ================================================================ -->
+  <h2 id="paper-anatomy">Sections in an Academic Paper</h2>
+  <p class="lead">Paper writing is the art of layering one piece to fit all readers.</p>
+
+  <h3 id="title-abstract">Title</h3>
+  <p>A concise, clear, attention-grabbing phrase that accurately reflects the main topic or finding.</p>
+  <ul>
+    <li><strong>Stand out:</strong> unique framing, a surprising finding, justified creativity</li>
+    <li><strong>Set accurate expectations:</strong> wrong expectations anger readers; overclaiming attracts the wrong audience</li>
+  </ul>
+
+  <h3>Abstract</h3>
+  <div class="admonition important">
+    <div class="admonition-title"><span class="icon">★</span> Key Rule</div>
+    <div class="admonition-body">
+      "Abstract is the most read part of a paper after the title. Make it count."
+    </div>
+  </div>
+  <ul>
+    <li>Make the reader want to continue reading</li>
+    <li>Get to the point fast — no slow warm-up</li>
+    <li>Bring the most interesting aspects with minimal unnecessary information</li>
+    <li>Include the most important takeaways upfront</li>
+  </ul>
+
+  <h3 id="introduction">Introduction</h3>
+  <p>An extension of the abstract that sets up the problem, explains its importance, and outlines the approach and findings.</p>
+
+  <h4>Full Paper Summary</h4>
+  <p>Everything important should appear (briefly) in the introduction: motivation, main idea/methodology, main findings. Verify by adding a reference to each paper section from the introduction — check that all sections are covered and the order matches.</p>
+
+  <h4>Convey Main Messages — Don't Build Suspense</h4>
+  <div class="admonition warning">
+    <div class="admonition-title"><span class="icon">⚠</span> Common Mistake</div>
+    <div class="admonition-body">
+      <p>An introduction should not end without the reader understanding the main thing they need to know. Some readers stop after the introduction.</p>
+      <div class="comparison" style="margin-top:0.5rem;">
+        <div class="comp-box comp-weak"><div class="comp-label">Suspense (avoid)</div>"We perform a thorough investigation of..."</div>
+        <div class="comp-box comp-strong"><div class="comp-label">Direct (good)</div>"Our analysis shows that..."</div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Motivation Section</h4>
+  <ul>
+    <li>Choose the motivation that makes your solution shine — pick aspects most shown in your findings</li>
+    <li>Keep motivation short in most cases — it's often obvious that you're addressing a real problem</li>
+    <li><strong>Exception:</strong> if your paper refocuses what people study (fundamental ingenuity), motivation is central</li>
+  </ul>
+
+  <h4>Background Section</h4>
+  <p>Explains essential concepts or prior work needed to understand the paper. <strong>Not a related work section</strong> — don't list prior art, explain what readers actually need. Place it before they need it.</p>
+
+  <h3 id="method-results">Method</h3>
+  <p>A description of what was developed or proposed, including how it works and why. Distinct from experimental setup — this is what others learn to use or replicate. Explain innovation others can leverage.</p>
+
+  <h3>Experimental Setup</h3>
+  <div class="admonition important">
+    <div class="admonition-title"><span class="icon">★</span> Do Not Underestimate</div>
+    <div class="admonition-body">
+      "Don't hide, don't deem unnecessary, don't underestimate its importance." Reproducibility is key to scientific advancement. Those who care most about your work will need every detail.
+    </div>
+  </div>
+  <p>Concentrate all technical details here. Results go in a separate section. Separate technicalities from outcomes.</p>
+
+  <h3>Results</h3>
+  <ul>
+    <li><strong>Be exact</strong> — neither overclaim nor underclaim</li>
+    <li><strong>Overclaiming:</strong> people who notice will distrust the work; others will believe wrong findings. Hedge when necessary: <em>generally, in most cases, in X%, seems likely</em></li>
+    <li><strong>Underclaiming:</strong> if you don't report actual findings, you defeat the purpose of sharing</li>
+    <li><strong>State in words:</strong> don't force readers to decipher graphs alone — write explicitly what graphs depict</li>
+    <li><strong>Little speculation:</strong> results section reports findings, not discussion</li>
+  </ul>
+
+  <h3>Analysis</h3>
+  <p>Interprets or broadens the main results to uncover patterns, implications, or deeper insights.</p>
+
+  <h3 id="other-sections">Related Work</h3>
+  <p>Reviews relevant literature to position your contribution and highlight differences. This is <strong>not</strong> a background section — your paper should be understandable without reading it. Position it near the end.</p>
+  <ul>
+    <li>Point relevant work, give credit, differentiate your work concretely</li>
+    <li>Avoid over-discussing prior works — too much space implies they are important</li>
+    <li>Emphasize novelty by explaining specific differences/advantages, not by just claiming novelty</li>
+  </ul>
+
+  <h3>Conclusion and Discussion</h3>
+  <p>The place for deeper thoughts. At this point readers are open to speculation and broader picture explanations. Reflect on contribution, broader impact, and future directions.</p>
+
+  <h3>Limitations</h3>
+  <p>Space given to a limitation should align with its actual importance. Long explanations signal the issue is crucial regardless of intent — be calibrated.</p>
+
+  <h3>Appendix</h3>
+  <p>Additional findings too interesting to ignore, but not warranting space in the main paper. Mainly serves replicators, deep understanders, and scrutinizers.</p>
+
+  <div class="admonition note">
+    <div class="admonition-title"><span class="icon">ℹ</span> Note on Appendix Visibility</div>
+    <div class="admonition-body">
+      Appendix content is likely ignored by most readers — it is not communicated as clearly as the main story and many readers don't know it exists. Write it for the small group who will go looking.
+    </div>
+  </div>
+
+  <h3>Acknowledgments</h3>
+  <p>Optional section thanking non-author contributors or grants supporting the work. In double-blind papers, often added only in the camera-ready version.</p>
+
+  <hr/>
+
+  <!-- ================================================================
+       GRAPHICS
+  ================================================================ -->
+  <h2 id="graphics">Graphics</h2>
+  <p class="lead">You bothered visualizing your data — make it show.</p>
+
+  <h3>The Zen of Graphics</h3>
+  <div class="admonition important">
+    <div class="admonition-title"><span class="icon">★</span> Core Principle</div>
+    <div class="admonition-body">
+      "You bothered visualizing your data, which means you wanted to convey an idea. Make this idea the first thing people see and understand."
+    </div>
+  </div>
+
+  <h4>First, Convey the Main Message</h4>
+  <p>Any addition clarifying other points is acceptable only if it doesn't cost the main message. Design figures so the primary insight is unavoidable.</p>
+
+  <h4>Minimal is Understandable</h4>
+  <p>Details take reader time, effort, and attention — all limited. Guide that effort to your priorities. Remove anything not conveying more information: lines, squares, extra text, bullets.</p>
+
+  <h4>Pop-Up &gt; Fast &gt; Time-Consuming</h4>
+  <ul>
+    <li><strong>Pop-up:</strong> Understand it in one second — ideal, if this matches your message</li>
+    <li><strong>Fast:</strong> Quick to grasp — acceptable</li>
+    <li><strong>Time-consuming:</strong> Reader moves on — this is failure</li>
+  </ul>
+
+  <h4>Saliency Should Equal Importance</h4>
+  <blockquote>"Look at all the fonts — they should all be boringly the same. The one you change to be interesting should be the one you want people to pay attention to."</blockquote>
+
+  <h4>Imagine the Ideal Eye Path</h4>
+  <p>Minimize unnecessary details. Keep related objects close. Make the eye path simple — no back-and-forth. Consider visualizing the path itself with arrows or shapes.</p>
+
+  <h3>Practical Tips</h3>
+  <ul>
+    <li><strong>Bar plots:</strong> Put the target bar on the right (reading is left-to-right)</li>
+    <li><strong>Reduce text:</strong> Text requires many eye jumps; replace with visual solutions where possible</li>
+    <li><strong>Related objects should be close:</strong> Minimize distance between items that readers compare</li>
+    <li><strong>Color matching:</strong> Contrasting colors for readability; similar tones for ease. Use same colors across graphs for same meaning. Be consistent</li>
+  </ul>
+
+  <h3>Graphics Checklist</h3>
+
+  <div class="admonition tip">
+    <div class="admonition-title"><span class="icon">✓</span> Before Submitting Any Figure</div>
+    <div class="admonition-body">
+      <ul class="checklist">
+        <li>Save as <code>.pdf</code> not <code>.jpg</code>/<code>.png</code> (resizes without pixelation in LaTeX)</li>
+        <li>Readable by colorblind (use markers/patterns/colorblind palette)</li>
+        <li>Large fonts — at least as large as <code>\small</code> or normal body text</li>
+        <li>Same font as paper text (usually Times New Roman/Serif)</li>
+        <li>Capitalize axis labels and legend entries</li>
+        <li>No <code>-</code>, <code>_</code>, jargon, or uncommon abbreviations in labels/legends</li>
+        <li>Use <code>%</code> not <code>0.xx</code> for percentages</li>
+        <li>Meaningful labels and legends</li>
+        <li>No black border around figure (despine)</li>
+        <li>All graphics follow the same theme (colors, names, backgrounds)</li>
+        <li>Trim whitespace around all images</li>
+        <li>Remove title (caption serves this purpose)</li>
+        <li>If sent to arXiv: remove spaces from figure filenames</li>
+        <li>Glimpse the figure for one second — did your eye go to the main point? If not, fix it.</li>
+        <li>Show significance/variation where relevant (error bars, line shades)</li>
+        <li>Use STD or Standard Error as appropriate (usually the latter)</li>
+        <li>Consider whether showing explicit values atop bars would help</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Captions</h3>
+  <p>Start captions with a short claim — the interesting part first. The opening sentence signals to readers what they're about to see. No title needed; the caption serves that function.</p>
+
+  <div class="admonition example">
+    <div class="admonition-title"><span class="icon">✎</span> Caption openers</div>
+    <div class="admonition-body">
+      <ul>
+        <li>"Training helps." — then details</li>
+        <li>"YagoTrain illustration." — then specifics</li>
+        <li>"Our method takes less space." — then data</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr/>
+
+  <!-- ================================================================
+       LATEX
+  ================================================================ -->
+  <h2 id="latex">LaTeX</h2>
+
+  <h3>Citations</h3>
+  <h4><code>\citep</code> vs. <code>\citet</code></h4>
+  <ul>
+    <li><strong><code>\citet</code></strong> — when referring to the paper as part of a sentence:<br/><em>"<code>\citet{Choshen}</code> showed that" → "Choshen (2053) showed that"</em></li>
+    <li><strong><code>\citep</code></strong> — default (parenthetical):<br/><em>"...the best guide <code>\citep{Einst1991}</code>" → "...the best guide (Einst1991)"</em></li>
+  </ul>
+
+  <div class="admonition warning">
+    <div class="admonition-title"><span class="icon">⚠</span> \cite Warning</div>
+    <div class="admonition-body">
+      <code>\cite</code> behaves differently depending on the style file — sometimes like <code>\citet</code>, sometimes like <code>\citep</code>. Rejecting from one conference and resubmitting to another could change all your in-sentence citations.
+    </div>
+  </div>
+
+  <h4>Colored Hyperlinks</h4>
+  <pre><code><span class="kw">\usepackage</span>{hyperref}
+<span class="kw">\usepackage</span>{xcolor}
+<span class="kw">\hypersetup</span>{
+    colorlinks,
+    linkcolor={<span class="vl">red!50!black</span>},
+    citecolor={<span class="vl">blue!50!black</span>},
+    urlcolor={<span class="vl">blue!80!black</span>}
+}</code></pre>
+
+  <h4>Cross-References</h4>
+  <ul>
+    <li>Sections/captions: <code>\ref{}</code></li>
+    <li>Custom anchors: <code>\hypertarget</code>, <code>\hyperlink</code></li>
+    <li>Non-breaking space: <code>Fig.~\ref{}</code> or <code>Table~\ref{}</code></li>
+  </ul>
+
+  <h3>Punctuation</h3>
+  <ul>
+    <li><strong>Quotation marks:</strong> <code>``word''</code> — not <code>"word"</code></li>
+    <li><strong>Compound word dash:</strong> <code>spin-off</code></li>
+    <li><strong>Range dash:</strong> <code>from--to</code></li>
+    <li><strong>Punctuation dash:</strong> <code>text---text</code></li>
+  </ul>
+
+  <h3>Shortening Commands</h3>
+  <pre><code><span class="cm">% Reduce paragraph by one line</span>
+<span class="kw">\looseness</span>=<span class="vl">-1</span>
+
+<span class="cm">% Penalize line breaks (prefer tighter spacing)</span>
+<span class="kw">\linepenalty</span>=<span class="vl">1000</span>
+
+<span class="cm">% Explicit vertical space (often disallowed by conferences)</span>
+<span class="kw">\vspace</span>{<span class="vl">-0.5cm</span>}
+
+<span class="cm">% Keep words on the same line</span>
+<span class="kw">\mbox</span>{<span class="vl">must stay together</span>}</code></pre>
+
+  <hr/>
+
+  <!-- ================================================================
+       REBUTTAL
+  ================================================================ -->
+  <h2 id="rebuttal">Rebuttal</h2>
+  <p class="lead">Reviewers are volunteers. Treat them accordingly.</p>
+
+  <h3>Core Principles</h3>
+
+  <h4>Treat Rebuttal as Collaboration</h4>
+  <div class="admonition important">
+    <div class="admonition-title"><span class="icon">★</span> Framing</div>
+    <div class="admonition-body">
+      "Approach reviewers as peers working with you to improve the paper, not opponents to defeat." They invested time reading and pointing out weaknesses. Frame responses cooperatively: clarify, improve, show openness — not defensiveness.
+    </div>
+  </div>
+
+  <h4>Show You Listened Before Responding</h4>
+  <p>Demonstrate understanding of the reviewer's concern before explaining your response. Briefly restate or paraphrase their point, then address it clearly.</p>
+  <blockquote>"This simple act signals respect and careful reading, and it often encourages a more constructive reaction."</blockquote>
+
+  <h4>Write for Two Audiences: AC and Reviewer</h4>
+  <p>The Area Chair (AC) will often be trying to assess whether the reviewer was fair. Position yourself appropriately — you are below in the hierarchy. Try not to tell someone they're wrong; gracefully provide context, clarify, or gently help them reach a better conclusion.</p>
+
+  <h4>Hard Facts Are Most Convincing</h4>
+  <p>If you only have a different opinion, they'll keep theirs. Conduct experiments showing what the reviewer wondered about. Refer clearly to where in the paper you did what they asked. <strong>Data beats words.</strong></p>
+
+  <h4>When Possible, Do Rather Than Debate</h4>
+  <ul>
+    <li>Make the change already, share the core change</li>
+    <li>Share an experiment result if small/timely</li>
+    <li>Answer with facts/data rather than arguments</li>
+    <li>If not, state clearly what you will change in the final version</li>
+  </ul>
+
+  <h4>Make It Skimmable</h4>
+  <ul>
+    <li>State the important bottom line early</li>
+    <li>Repeat the referred criticism briefly so the reviewer knows what you're addressing</li>
+    <li>Keep each response short and clear</li>
+    <li>Politely disagree, slightly correct, or simply agree</li>
+  </ul>
+
+  <hr/>
+
+  <!-- ================================================================
+       COLLABORATION
+  ================================================================ -->
+  <h2 id="collaboration">Collaboration in Writing</h2>
+
+  <h3>Reduce Overall Workload</h3>
+  <h4>Edit, Don't Just Comment</h4>
+  <p>When noting something worth changing, it is usually better to <strong>rewrite</strong> than to leave a comment. This reduces overhead for the original author and research shows direct edits improve quality more reliably.</p>
+
+  <h4>When Commenting Is Necessary</h4>
+  <ul>
+    <li>When you don't know the answer or how to fix it</li>
+    <li>When the paper is nearly ready for submission</li>
+    <li>When changes involve strategic decisions beyond your knowledge of the work</li>
+  </ul>
+
+  <hr/>
+
+  <!-- ================================================================
+       VOCABULARY
+  ================================================================ -->
+  <h2 id="vocab">Useful Words for Academic Writing</h2>
+  <p class="lead">Expand your word arsenal with precise, powerful vocabulary.</p>
+
+  <table class="vocab-table">
+    <thead>
+      <tr><th>Word / Phrase</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Facilitate</td><td>make easier</td></tr>
+      <tr><td>Expedite / Hasten</td><td>speed up</td></tr>
+      <tr><td>Remediate</td><td>make right, address (give remedy)</td></tr>
+      <tr><td>Mitigate</td><td>make an issue less severe</td></tr>
+      <tr><td>Circumvent</td><td>bypass a problem</td></tr>
+      <tr><td>Hinder</td><td>create difficulties for</td></tr>
+      <tr><td>Exacerbate</td><td>worsen a problem</td></tr>
+      <tr><td>Preclude</td><td>prevent in a final way; make impossible</td></tr>
+      <tr><td>Arduous</td><td>difficult, requiring much effort</td></tr>
+      <tr><td>Plethora / Myriad / Battery</td><td>abundance of</td></tr>
+      <tr><td>Dearth / Lack</td><td>scarcity of</td></tr>
+      <tr><td>Deluge</td><td>overwhelm, swamp</td></tr>
+      <tr><td>Eschew</td><td>deliberately avoid, abstain from</td></tr>
+      <tr><td>Refrain</td><td>stop oneself from doing</td></tr>
+      <tr><td>Disregard</td><td>ignore intentionally</td></tr>
+      <tr><td>Nascent</td><td>in early days; just beginning</td></tr>
+      <tr><td>Rudimentary / Crude</td><td>basic, immature, not processed</td></tr>
+      <tr><td>Exemplify</td><td>serve as an example of</td></tr>
+      <tr><td>Epitomize</td><td>serve as the perfect example for</td></tr>
+      <tr><td>Permeate / Pervade</td><td>spread through (as a problem)</td></tr>
+      <tr><td>Advent</td><td>arrival of something important ("Before the advent of...")</td></tr>
+      <tr><td>Ubiquitous</td><td>widespread, widely used</td></tr>
+      <tr><td>Culminating</td><td>resulting finally in; reaching a peak with</td></tr>
+      <tr><td>Elucidate</td><td>explain something currently unclear</td></tr>
+      <tr><td>Explicate</td><td>explain explicitly, breaking into parts</td></tr>
+      <tr><td>Purport</td><td>appear/claim to be or do something (esp. falsely)</td></tr>
+      <tr><td>Posit</td><td>state as truth; put forward as a basis of argument</td></tr>
+      <tr><td>Performant</td><td>has high performance</td></tr>
+      <tr><td>Subpar</td><td>worse than usual or expected</td></tr>
+      <tr><td>Surpass</td><td>go beyond; be better than</td></tr>
+    </tbody>
+  </table>
+
+  <hr/>
+
+  <!-- ================================================================
+       RESOURCES
+  ================================================================ -->
+  <h2 id="resources">Resources and Links</h2>
+
+  <div class="admonition seealso">
+    <div class="admonition-title"><span class="icon">📖</span> Essential Reading</div>
+    <div class="admonition-body">
+      <strong>Style: Ten Lessons in Clarity and Grace</strong> — widely considered the best book on academic prose style. If you read one resource beyond this guide, make it this book.
+    </div>
+  </div>
+
+  <ul class="resource-list">
+    <li><a href="https://www.youtube.com/watch?v=Unzc731iCUY" target="_blank" rel="noopener">How to Give a Research Talk — MIT</a><br/><span class="text-muted">Classic lecture on presenting academic research effectively</span></li>
+    <li><a href="https://www.microsoft.com/en-us/research/academic-program/write-great-research-paper/" target="_blank" rel="noopener">How to Write a Great Research Paper — Simon Peyton Jones</a><br/><span class="text-muted">Microsoft Research — one of the most cited writing guides in CS</span></li>
+    <li><a href="https://www.microsoft.com/en-us/research/academic-program/how-to-write-a-great-research-proposal/" target="_blank" rel="noopener">How to Write a Great Research Proposal</a><br/><span class="text-muted">Also covers how to give a research talk</span></li>
+    <li><a href="https://deviparikh.medium.com/how-we-write-rebuttals-dc84742fece1" target="_blank" rel="noopener">How We Write Rebuttals — Devi Parikh</a><br/><span class="text-muted">Practical, battle-tested rebuttal strategies from a top AI researcher</span></li>
+    <li><a href="https://maartensap.com/notes/rebuttals.html" target="_blank" rel="noopener">Rebuttal Notes — Maarten Sap</a><br/><span class="text-muted">Concise, principled guide to writing compelling rebuttals</span></li>
+  </ul>
+
+  <hr/>
+
+  <!-- ================================================================
+       AUTHOR
+  ================================================================ -->
+  <h2 id="author">About the Curator</h2>
+
+  <div class="author-card">
+    <div class="author-avatar">DZ</div>
+    <div class="author-meta">
+      <h3>Donnie Z</h3>
+      <div class="role">Academic Writing Curator &amp; Knowledge Architect</div>
+      <p>Donnie Z is the curator behind this ever-growing academic writing resource — a living compendium built from the collective wisdom of researchers, editors, and writing practitioners across the scientific community.</p>
+      <p>Passionate about making scientific communication clearer, more honest, and more accessible, Donnie maintains this guide as an open contribution to the broader research community. The guide covers the full spectrum of academic writing: from high-level story structure and section-by-section guidance, down to sentence stress mechanics, word choice principles, LaTeX tricks, graphics design, and rebuttal strategy.</p>
+      <p>Intended for scientific writers at all stages — from first-year PhD students to experienced researchers who want to sharpen their craft.</p>
+    </div>
+  </div>
+
+  <div class="admonition note">
+    <div class="admonition-title"><span class="icon">ℹ</span> Contributing</div>
+    <div class="admonition-body">
+      This is a community resource. If you have additions, corrections, or concrete tips for any section, contributions are welcome.
+    </div>
+  </div>
+
+  <!-- ── SECTION NAV ── -->
+  <div class="section-nav">
+    <a href="#intro">← Introduction</a>
+    <a href="#resources" class="nav-next">Resources →</a>
+  </div>
+
+</article>
+</main>
+
+<!-- ── RIGHT TOC ── -->
+<aside id="page-toc">
+  <div class="toc-label">Contents</div>
+  <ul class="toc-list">
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#where-to-start">Where to Start</a>
+      <ul>
+        <li><a href="#where-to-start">Top-Down</a></li>
+        <li><a href="#where-to-start">Bottom-Up</a></li>
+      </ul>
+    </li>
+    <li><a href="#story-level">Story Level</a>
+      <ul>
+        <li><a href="#core-principles">Core Principles</a></li>
+        <li><a href="#minor-tips">Minor Tips</a></li>
+      </ul>
+    </li>
+    <li><a href="#section-level">Section Level</a></li>
+    <li><a href="#paragraph-level">Paragraph Level</a></li>
+    <li><a href="#sentence-level">Sentence Level</a>
+      <ul>
+        <li><a href="#sentence-stress">Sentence Stress</a></li>
+        <li><a href="#mental-load">Mental Load</a></li>
+      </ul>
+    </li>
+    <li><a href="#word-choice">Word Choice</a>
+      <ul>
+        <li><a href="#word-exercises">Exercises</a></li>
+      </ul>
+    </li>
+    <li><a href="#paper-anatomy">Paper Anatomy</a>
+      <ul>
+        <li><a href="#title-abstract">Title &amp; Abstract</a></li>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#method-results">Method &amp; Results</a></li>
+        <li><a href="#other-sections">Other Sections</a></li>
+      </ul>
+    </li>
+    <li><a href="#graphics">Graphics</a></li>
+    <li><a href="#latex">LaTeX</a></li>
+    <li><a href="#rebuttal">Rebuttal</a></li>
+    <li><a href="#collaboration">Collaboration</a></li>
+    <li><a href="#vocab">Vocabulary</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#author">About Donnie Z</a></li>
+  </ul>
+</aside>
+
+</div><!-- #layout -->
+
+<script>
+// ── Sidebar toggle ──────────────────────────────────────────
+const sidebar   = document.getElementById('sidebar');
+const pageToc   = document.getElementById('page-toc');
+const main      = document.getElementById('main');
+const btnNav    = document.getElementById('btn-nav');
+const btnToc    = document.getElementById('btn-toc');
+
+btnNav.addEventListener('click', () => {
+  const collapsed = sidebar.classList.toggle('collapsed');
+  if (window.innerWidth > 768) {
+    main.style.marginLeft = collapsed ? '0' : '';
+  }
+});
+
+btnToc.addEventListener('click', () => {
+  pageToc.classList.toggle('collapsed');
+});
+
+// Collapse on mobile by default
+if (window.innerWidth <= 768) {
+  sidebar.classList.add('collapsed');
+}
+
+// ── Active nav + TOC on scroll ──────────────────────────────
+const headings  = document.querySelectorAll('.content-inner h2[id], .content-inner h3[id], .content-inner h4[id]');
+const navLinks  = document.querySelectorAll('.nav-link');
+const tocLinks  = document.querySelectorAll('.toc-list a');
+
+function getActive() {
+  const scrollY = window.scrollY + 90;
+  let active = null;
+  headings.forEach(h => {
+    if (h.offsetTop <= scrollY) active = h.id;
+  });
+  return active;
+}
+
+function updateActive() {
+  const id = getActive();
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+  });
+  tocLinks.forEach(a => {
+    a.classList.toggle('toc-active', a.getAttribute('href') === '#' + id);
+  });
+}
+
+window.addEventListener('scroll', updateActive, { passive: true });
+updateActive();
+</script>
+</body>
+</html>
