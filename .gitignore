@@ -1,2 +1,10 @@
 .DS_Store
 .claude/
+hmm_survey/*.aux
+hmm_survey/*.log
+hmm_survey/*.out
+hmm_survey/*.toc
+hmm_survey/*.gf
+hmm_survey/*.fls
+hmm_survey/*.fdb_latexmk
+hmm_survey/*.synctex.gz
